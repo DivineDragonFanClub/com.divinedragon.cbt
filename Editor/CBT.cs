@@ -71,7 +71,7 @@ namespace DivineDragon
         {
             // Turn the path into a lowercase InternalId
             // TODO: Do something about fe_scenes_
-            string processed_path = Path.ChangeExtension(path.Replace(EngageAddressableSettings.GameBuildPath + "/fe_assets_", ""), null);
+            string processed_path = Path.ChangeExtension(path.Replace(EngageAddressableSettings.GameBuildPath + "/fe_assets_", "").Replace(EngageAddressableSettings.GameBuildPath + "/fe_scenes_", ""), null);
             Debug.Log(processed_path);
 
             if (InternalIdCache.TryGetValue(processed_path, out string internalId))
