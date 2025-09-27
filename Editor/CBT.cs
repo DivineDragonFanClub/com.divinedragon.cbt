@@ -6,6 +6,7 @@ using Dragonstone;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
@@ -46,8 +47,7 @@ namespace DivineDragon
             }
             
             Debug.Log("Starting catalog loading");
-            
-            var handle = Addressables.LoadContentCatalogAsync(catalogPath, true);
+            var handle = Addressables.LoadContentCatalogAsync(catalogPath, false);
             // Editor support for async is lacking so we just work sync.
             handle.WaitForCompletion();
             
@@ -59,9 +59,12 @@ namespace DivineDragon
                  InternalIdCache = Addressables.ResourceLocators.ToArray()[2].Keys.OfType<string>()
                      .Where(s => !s.StartsWith("fe_assets_") && !(Guid.TryParseExact(s, "D", out _) && !Path.HasExtension(s))).ToDictionary(x => x.ToLower(), x => x);
                  
+                 Addressables.Release(handle);
                  Initialized = true;
                  return true;
             }
+            
+            Addressables.Release(handle);
             
             Debug.LogError("Could not load catalog.json file from Fire Emblem Engage");
             return false;
