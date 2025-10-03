@@ -18,17 +18,21 @@ namespace DivineDragon
 
         private static Dictionary<string, string> InternalIdCache { get; set; }
 
-        [InitializeOnLoadMethod]
-        private static void InitializeCatalogOnLoad()
-        {
-            if (File.Exists("Assets/Share/AddressableAssetsData/TempCatalogFolder/catalog.json"))
-            {
-                if (!LoadCatalogContent("Assets/Share/AddressableAssetsData/TempCatalogFolder/catalog.json"))
-                {
-                    Debug.LogError("CBT failed to load catalog.json on load even though it exists. Corrupted/Edited?");
-                }
-            }
-        }
+        // [InitializeOnLoadMethod]
+        // private static void InitializeCatalogOnLoad()
+        // {
+        //     if (File.Exists("Assets/Share/AddressableAssetsData/TempCatalogFolder/catalog.json"))
+        //     {
+        //         if (!LoadCatalogContent("Assets/Share/AddressableAssetsData/TempCatalogFolder/catalog.json"))
+        //         {
+        //             Debug.LogError("CBT failed to load catalog.json on load even though it exists. Corrupted/Edited?");
+        //         }
+        //     }
+        //     else
+        //     {
+        //         Debug.LogWarning("Divine Dragon Core settings are not configured yet. Consider configuring them to use the entire suite of tools.");
+        //     }
+        // }
         
         /// <summary>
         /// Loads the catalog file from Fire Emblem Engage to fetch file information and dependencies
