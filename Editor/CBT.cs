@@ -74,11 +74,15 @@ namespace DivineDragon
             return false;
         }
 
+        /// <summary>
+        /// Transforms a physical path in the dump into a InternalId as best as possible
+        /// </summary>
+        /// <param name="path">Physical path of a bundle in the dump</param>
+        /// <returns>Returns the path as a InternalId or a empty string if it failed</returns>
         public static string PathToInternalId(string path)
         {
             // Turn the path into a lowercase InternalId
-            // TODO: Do something about fe_scenes_
-            string processed_path = Path.ChangeExtension(path.Replace(EngageAddressableSettings.GameBuildPath + "/fe_assets_", "").Replace(EngageAddressableSettings.GameBuildPath + "/fe_scenes_", ""), null);
+            string processed_path = Path.ChangeExtension(path.Replace("\\", "/").Replace(EngageAddressableSettings.GameBuildPath + "/fe_assets_", "").Replace(EngageAddressableSettings.GameBuildPath + "/fe_scenes_", ""), null);
             Debug.Log(processed_path);
 
             if (InternalIdCache.TryGetValue(processed_path, out string internalId))
