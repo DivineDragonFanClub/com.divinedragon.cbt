@@ -59,10 +59,18 @@ namespace DivineDragon
             {
                  Debug.Log("Successfully loaded Engage's catalog.json ");
 
-                 // Build a cache of lowercase InternalId to actual InternalId to facilitate matching physical files to addresses
-                 InternalIdCache = Addressables.ResourceLocators.ToArray()[2].Keys.OfType<string>()
-                     .Where(s => !s.StartsWith("fe_assets_") && !(Guid.TryParseExact(s, "D", out _) && !Path.HasExtension(s))).ToDictionary(x => x.ToLower(), x => x);
-                 
+                 var loadedLocator = handle.Result;
+                 if (loadedLocator == null)
+                 {
+                     Addressables.Release(handle);
+                     Debug.LogError("LoadContentCatalogAsync succeeded but returned a null locator");
+                     return false;
+                 }
+
+                 InternalIdCache = loadedLocator.Keys.OfType<string>()
+                     .Where(s => !s.StartsWith("fe_assets_") && !(Guid.TryParseExact(s, "D", out _) && !Path.HasExtension(s)))
+                     .ToDictionary(x => x.ToLower(), x => x);
+
                  Addressables.Release(handle);
                  Initialized = true;
                  return true;
@@ -81,6 +89,12 @@ namespace DivineDragon
         /// <returns>Returns the path as a InternalId or a empty string if it failed</returns>
         public static string PathToInternalId(string path)
         {
+            if (InternalIdCache == null)
+            {
+                Debug.LogError("CBT.PathToInternalId called before catalog was loaded. Call CBT.LoadCatalogContent first.");
+                return string.Empty;
+            }
+
             // Turn the path into a lowercase InternalId
             string processed_path = Path.ChangeExtension(path.Replace("\\", "/").Replace(EngageAddressableSettings.GameBuildPath + "/fe_assets_", "").Replace(EngageAddressableSettings.GameBuildPath + "/fe_scenes_", ""), null);
             Debug.Log(processed_path);
